@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link th:replace="/fragments/layout :: style-bootstrap">
+  <script th:replace="/fragments/layout :: script-bootstrap"></script>
+  <title>My Books</title>
+  <link rel="stylesheet" type="text/css" th:href="@{styles/styles.css}">
+
+</head>
+
+<body>
+  <div th:replace="/fragments/layout :: nav-header"></div>
+  <h1>Saved Books</h1>
+
+  <div>
+    <h3><a style="color: white;" th:href="@{/}">Search</a> and add a book to see it here</h3>
+  </div>
+  <div th:if="${message}">
+    <h2 th:text="${message}"></h2>
+  </div>
+  <!-- Show user's books -->
+  <div class="content" th:if="${books} ?: '(No Books Available)'">
+    <div class="show-book" th:each="book: ${books}">
+      <div class="table">
+        <div class="info">
+          <strong>
+            <h2 th:text="${book.title}" id="title"></h2>
+          </strong>
+          <h2 id="authors" th:each="author: ${book.authors}">
+            <p th:text="${author}"></p>
+          </h2>
+        </div>
+        <div class="image">
+          <p>
+            <img th:src="${book?.thumbnail}" height="350" width="200">
+          </p>
+        </div>
+        <div class="desc">
+          <p th:text="${book.description}"></p>
+        </div>
+        <div class="delete">
+          <form th:action="@{/delete}" method="post" th:object="${delete_book}" id="form-del">
+            <input type="checkbox" name="id" th:value="${book.id}" checked hidden>
+            <input type="checkbox" name="username" th:value="${#authentication.getPrincipal().getUsername()}" checked hidden>
+          <button type="submit" class="btn btn-primary btn-lg" id="btn-del">Delete</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:replace="/fragments/layout :: style-bootstrap">
+    <script th:replace="/fragments/layout :: script-bootstrap"></script>
+    <title>Home Page</title>
+
+    <link rel="stylesheet" type="text/css" href="/styles/styles.css">
+</head>
+
+<body>
+    <div th:replace="/fragments/layout :: nav-header"></div>
+    <!-- Search for a book  -->
+    <h1>Search For a Book</h1>
+    <form action="/pega/" method="get" id="form-Book" autocomplete="off">
+        <div class="row mb-3">
+            <label for="inputTitle3" class="col-sm-2 col-form-label">Title</label>
+            <div class="col-sm-10">
+                <input type="text" name="q" class="form-control" id="inputTitle3" autofocus required placeholder="Title, Id, or ISBN">
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="inputAuthor3" class="col-sm-2 col-form-label">Author</label>
+            <div class="col-sm-10">
+                <input type="text" name="inauthor" class="form-control" id="inputAuthor3" placeholder="Author">
+            </div>
+        </div>
+        <div id="btn-send"><button type="submit" class="btn btn-primary">Send</button></div>
+    </form>
+
+    <div class="container" hidden>
+        <span sec:authentication="principal.username"> User</span>
+    </div>
+
+    <!-- Show Books-->
+    <div class="content">
+        <!-- If user saved a book the page will reload and show the book saved -->
+        <div th:if="${Sbooks}">
+            <div class="show-book" th:each="book: ${Sbooks}">
+                <div class="table">
+                    <div class="info">
+                        <h2 th:text="${book.title}" id="title"></h2>
+                        <h2 id="authors">
+                            <p th:each="author: ${book.authors}"> <strong th:text="${author}"></strong> </p>
+                        </h2>
+                    </div>
+                    <div class="image">
+                        <p>
+                            <img th:src="${book?.thumbnail}" height="350" width="200">
+                        </p>
+                    </div>
+                    <div class="desc">
+                        <p th:text="${book.description}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Show books returned from search -->
+        <div class="show-book" th:each="book: ${books}">
+            <div class="table">
+                <div class="info">
+                    <h2 th:text="${book.title}" id="title"></h2>
+                    <h2 id="authors">
+                        <p th:each="author: ${book.authors}"> <strong th:text="${author}"></strong> </p>
+                    </h2>
+                </div>
+                <div class="image">
+                    <p>
+                        <img th:src="${book?.imageLinks?.thumbnail}" height="350" width="200">
+                    </p>
+                </div>
+                <div class="desc">
+                    <p th:text="${book.description}"></p>
+                </div>
+                <!-- Save book -->
+                <div class="save">
+                    <form th:action="@{/save}" method="post" th:object="${save_book}" id="form-save">
+                        <input type="checkbox" name="i" th:value="${book.index}" checked hidden>
+                        <input type="checkbox" name="username" th:value="${#authentication.getPrincipal().getUsername()}" checked hidden>
+                        <button type="submit" class="btn btn-primary btn-lg" id="btn-save">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

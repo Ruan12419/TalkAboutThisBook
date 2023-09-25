@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link th:replace="/fragments/layout :: style-bootstrap">
+  <script th:replace="/fragments/layout :: script-bootstrap"></script>
+  <title>Error</title>
+  <link rel="stylesheet" type="text/css" href="/styles/styles.css">
+
+  <style>
+    h1,
+    p {
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div th:replace="/fragments/layout :: nav-header">
+
+  </div>
+
+  <!-- If google books api do not return any book this page will show with a message from server -->
+  <h1 th:text="${message}"></h1>
+  <p><a href="/" style="color: white;">Try again</a></p>
+</body>
+
+</html>

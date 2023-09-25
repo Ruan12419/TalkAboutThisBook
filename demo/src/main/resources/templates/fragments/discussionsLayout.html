@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+
+</head>
+
+<body>
+  <!-- Fragment of the form to post a new discussion -->
+  <div th:fragment="post-discussion" style="display: flex;flex-direction: column;align-items: center;">
+    <p> Choose one of your saved books and start talking about it</p>
+    <form th:action="@{/discuss}" method="post" style="display: flex;flex-direction: column;">
+      <select name="id">
+        <option th:each="book : ${books}" th:value="${book.id}"><strong th:text="${book.title}"></strong></option>
+      </select>
+      <label for="text-area-discussion" style="text-align: center;">Write Here</label>
+      <textarea name="text" id="text-area-discussion" cols="30" rows="10"></textarea>
+      <button type="submit" class="btn btn-primary btn-lg" id="btn-send" style="margin-top: 10px;">Post</button>
+    </form>
+  </div>
+  <!-- Fragment of all the discussion and comments content -->
+  <div th:fragment="discussions-content" class="content">
+    <div th:if="${discussionList}">
+      <div class="show-discussions" th:each="discussion: ${discussionList}">
+        <div class="container mt-5 mb-5" th:id="${discussion.id}">
+          <div class="row d-flex align-items-center justify-content-center">
+            <div class="col-md-6">
+              <div class="card" style="color: black; border-bottom-left-radius: 12px; border-bottom-right-radius: 7px;">
+                <div class="d-flex justify-content-between p-2 px-3">
+                  <div class="d-flex flex-row align-items-center">
+                    <div class="d-flex flex-column ml-2">
+                      <!-- See all discussions of user -->
+                      <a th:href="@{/discuss/{id}(id=${discussion.user.id})}" onmouseover="userInfo()" style="text-decoration: none;"><span class="font-weight-bold" th:text="${discussion.user.firstName}">User</span></a>
+                      <div class="user-options" th:unless="${discussion.user.id == userId}" hidden>
+                        <form id="form-foll" th:action="@{/follow}" method="post" >
+                          <input name="id" th:id="foll" type="checkbox" th:value="${discussion.user.id}" checked hidden>
+                          <button type="submit" id="btn-foll" style="font-size: 10px;background: none;border: none;padding: 0px;">Follow</button>
+                          </form>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+                <!-- Show the discussion text and the book thumbnail -->
+                <div class="table" style="background-color: inherit;">
+                  <h2>
+                    <p th:utext="${#strings.unescapeJava(#strings.replace(#strings.escapeJava(discussion.text),'\n','&lt;br /&gt;'))}" id="title"></p></h2>
+              <div class="thumbnail" style="padding-top: 15px;">
+                <a th:href="@{/discuss/book/{id}(id=${discussion.book.id})}" style="text-decoration: none;"><img th:src="${discussion.book.thumbnail}" style="width: -webkit-fill-available; width: -moz-available;"></a>
+              </div>
+            </div>
+              <!-- Show all the comments of the discussion -->
+              <div class="p-2">
+                <hr>
+                <div class="d-flex justify-content-between align-items-center">
+                </div>
+                <div class="comments" th:each="comment : ${commentList}" >
+                  <div class="comment" th:if="${comment.discussion.id == discussion.id}" th:id="@{|#comment-${comment.id}|}">
+                    <div class="d-flex flex-row mb-2">
+                      <div class="d-flex flex-column ml-2"> <div class="name"><span th:text="${comment.user.firstName}">firstname </span><span> </span><span th:text="${comment.user.lastName}">lastname</span></div> <small class="comment-text" th:text="${comment.text}" style="font-family: verdana;font-size: 15px;">text</small>
+                        <!-- Delete comment -->
+                        <div class="d-flex flex-column ml-2" th:if="${comment.user.id == userId}">
+                          <form id="form-del-comment" th:action="@{/delete-comment}" th:method="post">
+                            <input type="checkbox" name="id" th:id="del-comment" th:value="${comment.id}" checked hidden>
+                            <button onclick="deleteComment()" style="font-size: 10px;background: none;border: none;padding: 0px;">Delete</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
+                  </div>
+                </div>
+              </div>
+              <!-- Post new comment to the discussion -->
+              <form id="postComment" th:action="@{/comment-discussion}" method="post">
+                <div class="comment-input">
+                  <input type="checkbox" name="id" id="id" th:value="${discussion.id}" checked hidden>
+                  <input type="checkbox" name="parentId" id="parentId" th:value="${comment?.parentId}" checked hidden>
+                  <input type="text" name="text" id="text" class="form-control" onfocus="stopReload()" onblur="reloadAgain()">
+                  <input type="submit" value="Comment" class="post-comment">
+                </div>
+              </form>
+            </div>
+            <div class="table" style="background-color: inherit;">
+              <!-- Delete the discussion -->
+              <div class="delete" th:if="${discussion.user.id == userId}">
+                <form th:action="@{/delete-discussion}" method="post" th:object="${delete_discussion}" id="form-del">
+                  <input type="checkbox" name="id" id="discussion-id" th:value="${discussion.id}" checked hidden>
+                  <button type="submit" class="btn btn-primary btn-lg" id="btn-del">Delete</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

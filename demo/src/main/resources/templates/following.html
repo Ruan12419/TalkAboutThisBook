@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:replace="/fragments/layout :: style-bootstrap">
+    <script th:replace="/fragments/layout :: script-bootstrap"></script>
+
+    <title>Following</title>
+    
+    <link rel="stylesheet" type="text/css" href="/styles/styles.css">
+
+    <style>
+        h2 {
+            text-align: center;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+
+</head>
+<body>
+<div th:replace="/fragments/layout :: nav-header"></div>
+
+<div class="nav-follow" style="margin: 10px;">
+    <div class="following">
+        <h2>Following</h2>
+        <div class="user-following" th:if="${following}">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Discussions</th>
+                    <th scope="col">Unfollow</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="follow : ${following}">
+                    <td th:text="${follow.following.firstName}"><a th:href="@{/discuss/{id}(id=${follow.user.id})}">No User</a></td>
+                    <td th:text="${follow.following.lastName}">To Show</td>
+                    <td>See User <a th:href="@{/discuss/{id}(id=${follow.following.id})}">Discussions</a></td>
+                    <td>
+                        <form id="form-unfoll" th:action="@{/unfollow}" method="post">
+                            <input name="id" th:id="unfoll" type="checkbox" th:value="${follow.following.id}" checked hidden>
+                            <button  id="btn-unfoll" style="background: none;border: none;padding: 0px;">Unfollow</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="followers">
+        <h2>Followers</h2>
+        <div class="user-followers" th:if="${followers}">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Discussions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="follow : ${followers}">
+                    <td th:text="${follow.user.firstName}">No User</td>
+                    <td th:text="${follow.user.lastName}">To Show</td>
+                    <td>See User <a th:href="@{/discuss/{id}(id=${follow.user.id})}">Discussions</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

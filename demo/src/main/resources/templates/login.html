@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:replace="/fragments/layout :: style-bootstrap">
+    <script th:replace="/fragments/layout :: script-bootstrap"></script>
+    <title>Login</title>
+
+</head>
+
+<body>
+    <div th:replace="/fragments/layout :: nav-header"></div>
+
+    <!-- Log In form -->
+    <div style="display: flex;justify-content: center;padding: 20px;">
+        <div
+            style="box-shadow: 10px 10px 18px -6px rgba(0,0,0,0.75); border-radius: 10px; width: -webkit-fill-available; width: -moz-available;">
+            <div style="padding: 20px;">
+                <form th:action="@{/login}" method="post" autocomplete="off">
+
+                    <div th:if="${param.success}">
+                        <div class="alert alert-info">You've successfully registered! Log In Now</div>
+                    </div>
+
+                    <div th:if="${param.error}">
+                        <div class="alert alert-danger">Invalid username or password.</div>
+                    </div>
+
+                    <div th:if="${param.logout}">
+                        <div class="alert alert-info">You have been logged out.</div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Username</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="username" class="form-control" id="inputEmail3">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" name="password" class="form-control" id="inputPassword3">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-10 offset-sm-2">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="gridCheck1">
+                                <label class="form-check-label" for="gridCheck1">
+                                    Remember me
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                </form>
+                <!-- Link for registration page -->
+                <div class="form-group">
+                    <span>New user? <a href="/" th:href="@{/registration}">Register here</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

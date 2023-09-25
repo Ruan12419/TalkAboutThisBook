@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link th:replace="/fragments/layout :: style-bootstrap">
+    <script th:replace="/fragments/layout :: script-bootstrap"></script>
+    <script th:replace="/fragments/layout :: script-jquery"></script>
+    <script th:replace="/fragments/layout :: script"></script>
+
+    <title>Discussions</title>
+    <link rel="stylesheet" type="text/css" href="/styles/discussions.css">
+    <link rel="stylesheet" type="text/css" href="/styles/styles.css">
+</head>
+
+<body>
+    <!-- Inserting layouts from '/fragments' -->
+    <div th:replace="/fragments/layout :: nav-header"></div>
+
+    <div th:replace="/fragments/discussionsLayout :: post-discussion"></div>
+
+    <div th:replace="/fragments/discussionsLayout :: discussions-content"></div>
+</body>
+
+</html>
